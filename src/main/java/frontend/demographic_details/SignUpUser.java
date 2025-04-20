@@ -1,5 +1,6 @@
 package frontend.demographic_details;
 
+import backend.service.SignUpService;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
@@ -7,17 +8,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.sql.Date;
+import java.util.Calendar;
 
 public class SignUpUser extends JFrame implements ActionListener {
 
-    JTextField nameField;
-    JTextField passwordField;
-    JTextField PhonenoField;
-    JTextField EmailField;
-    JTextField ConfirmpassField;
-    JButton SignUpButton;
-    JSVGCanvas svgCanvas;
-    JSVGCanvas svgCanvas1;
+    JTextField nameField, phoneField, emailField;
+    JPasswordField passwordField, confirmPasswordField;
+    JButton signUpButton;
+    JSVGCanvas svgCanvas, svgCanvas1;
 
     SignUpUser() {
         setTitle("SignUpUser");
@@ -65,39 +64,39 @@ public class SignUpUser extends JFrame implements ActionListener {
         layeredPane.add(svgCanvas1, Integer.valueOf(1));
 
         // SignUpBox Panel
-        JPanel SignUpBox = new JPanel();
-        SignUpBox.setBounds(450, 100, 600, 650);
-        SignUpBox.setBorder(BorderFactory.createLineBorder(new Color(62, 39, 35), 3));
-        SignUpBox.setBackground(Color.WHITE);
-        SignUpBox.setLayout(new BoxLayout(SignUpBox, BoxLayout.Y_AXIS));
-        layeredPane.add(SignUpBox, Integer.valueOf(2));
+        JPanel signUpBox = new JPanel();
+        signUpBox.setBounds(450, 100, 600, 650);
+        signUpBox.setBorder(BorderFactory.createLineBorder(new Color(62, 39, 35), 3));
+        signUpBox.setBackground(Color.WHITE);
+        signUpBox.setLayout(new BoxLayout(signUpBox, BoxLayout.Y_AXIS));
+        layeredPane.add(signUpBox, Integer.valueOf(2));
 
         nameField = new JTextField(20);
-        PhonenoField = new JTextField(20);
-        EmailField = new JTextField(20);
+        phoneField = new JTextField(20);
+        emailField = new JTextField(20);
         passwordField = new JPasswordField(20);
-        ConfirmpassField = new JPasswordField(20);
+        confirmPasswordField = new JPasswordField(20);
 
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
-        SignUpBox.add(createInputPanel("Enter your Name", nameField));
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
-        SignUpBox.add(createInputPanel("Enter your Phone Number", PhonenoField));
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
-        SignUpBox.add(createInputPanel("Enter email", EmailField));
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
-        SignUpBox.add(createInputPanel("Enter password", passwordField));
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
-        SignUpBox.add(createInputPanel("Confirm password", ConfirmpassField));
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 40)));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter your Name", nameField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter your Phone Number", phoneField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter email", emailField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter password", passwordField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Confirm password", confirmPasswordField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 40)));
 
-        SignUpButton = new JButton("SignUp");
-        SignUpButton.setFont(new Font("Serif", Font.BOLD, 32));
-        SignUpButton.setBackground(new Color(62, 39, 35));
-        SignUpButton.setForeground(Color.WHITE);
-        SignUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        SignUpButton.setMaximumSize(new Dimension(200, 60));
-        SignUpButton.addActionListener(this);
-        SignUpBox.add(SignUpButton);
+        signUpButton = new JButton("SignUp");
+        signUpButton.setFont(new Font("Serif", Font.BOLD, 32));
+        signUpButton.setBackground(new Color(62, 39, 35));
+        signUpButton.setForeground(Color.WHITE);
+        signUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        signUpButton.setMaximumSize(new Dimension(200, 60));
+        signUpButton.addActionListener(this);
+        signUpBox.add(signUpButton);
 
         setVisible(true);
     }
@@ -129,31 +128,43 @@ public class SignUpUser extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = nameField.getText();
-        String password = passwordField.getText();
-        String phoneno = PhonenoField.getText();
-        String email = EmailField.getText();
-        String confirmpass = ConfirmpassField.getText();
+        String password = new String(passwordField.getPassword());
+        String phoneNumber = phoneField.getText();  // Make sure you're getting 'phoneNumber' here
+        String email = emailField.getText();
+        String confirmPassword = new String(confirmPasswordField.getPassword());
 
-        if (e.getSource() == SignUpButton) {
-            if (!name.isEmpty() && !password.isEmpty() && !phoneno.isEmpty() &&
-                    !email.isEmpty() && !confirmpass.isEmpty()) {
+        if (e.getSource() == signUpButton) {
+            if (!name.isEmpty() && !password.isEmpty() && !phoneNumber.isEmpty() &&  // Correct variable 'phoneNumber'
+                    !email.isEmpty() && !confirmPassword.isEmpty()) {
 
-                if (!password.equals(confirmpass)) {
+                if (!password.equals(confirmPassword)) {
                     JOptionPane.showMessageDialog(this, "Passwords do not match!");
                 } else {
-                    JOptionPane.showMessageDialog(this, "SignUp Successful");
+                    // Get the current date for 'Join_date'
+                    Date joinDate = new Date(Calendar.getInstance().getTimeInMillis()); // Correct field for join date
+
+                    SignUpService signUpService = new SignUpService();
+                    boolean isRegistered = signUpService.registerUser(name, password, phoneNumber, email, "Customer", joinDate); // Passing correct params
+
+                    if (isRegistered) {
+                        JOptionPane.showMessageDialog(this, "SignUp Successful");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Error occurred during SignUp");
+                    }
                 }
 
-            } else if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Enter name");
-            } else if (phoneno.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Enter phone Number");
-            } else if (email.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Enter email");
-            } else if (password.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Enter password");
-            } else if (confirmpass.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Confirm password");
+            } else {
+                if (name.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Enter name");
+                } else if (phoneNumber.isEmpty()) {  // Correct check for phoneNumber
+                    JOptionPane.showMessageDialog(this, "Enter phone number");
+                } else if (email.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Enter email");
+                } else if (password.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Enter password");
+                } else if (confirmPassword.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Confirm password");
+                }
             }
         }
     }
