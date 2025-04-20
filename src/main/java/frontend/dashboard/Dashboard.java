@@ -104,7 +104,7 @@ public class Dashboard extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Reviews");
+        jButton2.setText("About");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -152,7 +152,7 @@ public class Dashboard extends javax.swing.JFrame {
         jTextField6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jTextField6.setText("jTextField6");
 
-        jButton5.setText("Reviews");
+        jButton5.setText("About");
 
         jLabel15.setText("jLabel15");
 
@@ -195,7 +195,7 @@ public class Dashboard extends javax.swing.JFrame {
         jTextField7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jTextField7.setText("jTextField7");
 
-        jButton6.setText("Reviews");
+        jButton6.setText("About");
 
         jLabel17.setText("jLabel17");
 
@@ -238,7 +238,7 @@ public class Dashboard extends javax.swing.JFrame {
         jTextField4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jTextField4.setText("jTextField4");
 
-        jButton3.setText("Reviews");
+        jButton3.setText("About");
 
         jLabel11.setText("jLabel11");
 
@@ -283,7 +283,7 @@ public class Dashboard extends javax.swing.JFrame {
         jTextField3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jTextField3.setText("jTextField3");
 
-        jButton4.setText("Reviews");
+        jButton4.setText("About");
 
         jLabel13.setText("jLabel13");
 
@@ -326,7 +326,7 @@ public class Dashboard extends javax.swing.JFrame {
         jTextField8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jTextField8.setText("jTextField8");
 
-        jButton7.setText("Reviews");
+        jButton7.setText("About");
 
         jLabel19.setText("jLabel19");
 
