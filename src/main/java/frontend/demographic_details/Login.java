@@ -1,5 +1,6 @@
 package frontend.demographic_details;
 
+import backend.DTO.LoginDTO;
 import backend.service.LoginService;
 import org.apache.batik.swing.JSVGCanvas;
 
@@ -12,12 +13,12 @@ import java.net.URL;
 public class Login extends JFrame implements ActionListener {
 
     JTextField usernameField;
-    JPasswordField passwordField; // ✅ Fix type to JPasswordField
+    JTextField passwordField;
     JButton loginButton;
     JSVGCanvas svgCanvas;
     JSVGCanvas svgCanvas1;
 
-    public Login() {
+    Login() {
         setTitle("Login");
         setSize(1500, 800);
         setLocationRelativeTo(null);
@@ -130,6 +131,8 @@ public class Login extends JFrame implements ActionListener {
 
         // Add loginBox after SVGs so it's on top
         add(loginBox);
+
+        // Ensure loginBox stays on top
         getContentPane().setComponentZOrder(loginBox, 0);
 
         setVisible(true);
@@ -138,25 +141,21 @@ public class Login extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String username = usernameField.getText();
-        String password = new String(passwordField.getPassword()); // ✅ Fixed method
+        String password = new String(passwordField.getText());
 
         if (e.getSource() == loginButton) {
             if (!username.isEmpty() && !password.isEmpty()) {
+                LoginDTO user = new LoginDTO(username, password);
                 LoginService loginService = new LoginService();
-                boolean isValid = loginService.validateUser(username, password);
+                boolean isValid = loginService.validateUser(user);
 
                 if (isValid) {
                     JOptionPane.showMessageDialog(null, "Login Successful");
-
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid username or password");
                 }
             } else {
-                if (username.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Enter username");
-                } else {
-                    JOptionPane.showMessageDialog(null, "Enter password");
-                }
+                JOptionPane.showMessageDialog(null, username.isEmpty() ? "Enter username" : "Enter password");
             }
         }
     }
@@ -164,4 +163,5 @@ public class Login extends JFrame implements ActionListener {
     public static void main(String[] args) {
         new Login();
     }
+
 }
