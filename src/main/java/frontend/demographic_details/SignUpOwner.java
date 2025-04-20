@@ -1,4 +1,4 @@
-package frontend.demographic_details;
+package frontend.DemographicDetails;
 
 import org.apache.batik.swing.JSVGCanvas;
 
@@ -12,11 +12,11 @@ public class SignUpOwner extends JFrame implements ActionListener {
 
     JTextField nameField;
     JTextField passwordField;
-    JTextField PhonenoField;
-    JTextField EmailField;
-    JTextField ConfirmpassField;
-    JTextField CafeField;
-    JButton SignUpButton;
+    JTextField phonenoField;
+    JTextField emailField;
+    JTextField confirmpassField;
+    JTextField cafeField;
+    JButton signUpButton;
     JSVGCanvas svgCanvas;
     JSVGCanvas svgCanvas1;
 
@@ -25,226 +25,145 @@ public class SignUpOwner extends JFrame implements ActionListener {
         setSize(1500, 1100);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        getContentPane().setBackground(new Color(161, 107, 68));
         setLayout(null);
 
+        // Layered Pane to manage overlapping components
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setBounds(0, 0, 1500, 1100);
+        add(layeredPane);
+
+        // Background Panel
+        JPanel backgroundPanel = new JPanel();
+        backgroundPanel.setBounds(0, 0, 1500, 1100);
+        backgroundPanel.setBackground(new Color(161, 107, 68));
+        layeredPane.add(backgroundPanel, Integer.valueOf(0));
+        backgroundPanel.setLayout(null);
+
+        // SVG 1 - Bottom left corner
         svgCanvas = new JSVGCanvas();
         URL svgURL = getClass().getClassLoader().getResource("Assests/svg1.svg");
         if (svgURL != null) {
             svgCanvas.setURI(svgURL.toString());
         } else {
-            System.err.println("SVG file not found!");
+            System.err.println("SVG file 1 not found!");
         }
-        svgCanvas.setBounds(0, 85, 900, 900);
+        svgCanvas.setBounds(0, 60, 900, 900);
         svgCanvas.setOpaque(false);
         svgCanvas.setBackground(new Color(0, 0, 0, 0));
+        layeredPane.add(svgCanvas, Integer.valueOf(1));
 
-
+        // SVG 2 - Top right corner
         svgCanvas1 = new JSVGCanvas();
         URL svgURL1 = getClass().getClassLoader().getResource("Assests/svg2.svg");
         if (svgURL1 != null) {
             svgCanvas1.setURI(svgURL1.toString());
         } else {
-            System.err.println("SVG file not found!");
+            System.err.println("SVG file 2 not found!");
         }
         svgCanvas1.setBounds(595, -170, 900, 900);
         svgCanvas1.setOpaque(false);
         svgCanvas1.setBackground(new Color(0, 0, 0, 0));
+        layeredPane.add(svgCanvas1, Integer.valueOf(1));
 
+        // SignUpBox Panel
+        JPanel signUpBox = new JPanel();
+        signUpBox.setBounds(450, 100, 600, 700);
+        signUpBox.setBorder(BorderFactory.createLineBorder(new Color(62, 39, 35), 3));
+        signUpBox.setBackground(Color.WHITE);
+        signUpBox.setLayout(new BoxLayout(signUpBox, BoxLayout.Y_AXIS));
+        layeredPane.add(signUpBox, Integer.valueOf(2));
 
-        JPanel SignUpBox = new JPanel();
-        SignUpBox.setBounds(450, 80, 600, 680);
-        SignUpBox.setBorder(BorderFactory.createLineBorder(new Color(62, 39, 35), 3));
-        SignUpBox.setBackground(Color.WHITE);
-        SignUpBox.setLayout(new BoxLayout(SignUpBox, BoxLayout.Y_AXIS));
-        SignUpBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel PhonenoPanel = new JPanel();
-        PhonenoPanel.setLayout(new BoxLayout(PhonenoPanel, BoxLayout.Y_AXIS));
-        PhonenoPanel.setOpaque(false);
-        PhonenoPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel enterphoneno = new JLabel("Enter your Phone Number");
-        enterphoneno.setFont(new Font("Serif", Font.BOLD, 24));
-        enterphoneno.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        PhonenoField = new JTextField(20);
-        PhonenoField.setBackground(new Color(62, 39, 35));
-        PhonenoField.setForeground(Color.WHITE);
-        PhonenoField.setMaximumSize(new Dimension(400, 45));
-        PhonenoField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        PhonenoField.setCaretColor(Color.WHITE);
-        PhonenoField.setFont(new Font("Serif", Font.PLAIN, 24));
-
-        PhonenoPanel.add(enterphoneno);
-        PhonenoPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        PhonenoPanel.add(PhonenoField);
-
-        JPanel namePanel = new JPanel();
-        namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.Y_AXIS));
-        namePanel.setOpaque(false);
-        namePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel entername = new JLabel("Enter your Name");
-        entername.setFont(new Font("Serif", Font.BOLD, 24));
-        entername.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        // Input Fields
         nameField = new JTextField(20);
-        nameField.setBackground(new Color(62, 39, 35));
-        nameField.setForeground(Color.WHITE);
-        nameField.setMaximumSize(new Dimension(400, 45));
-        nameField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        nameField.setCaretColor(Color.WHITE);
-        nameField.setFont(new Font("Serif", Font.PLAIN, 24));
-
-        namePanel.add(entername);
-        namePanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        namePanel.add(nameField);
-
-        JPanel cafePanel = new JPanel();
-        cafePanel.setLayout(new BoxLayout(cafePanel, BoxLayout.Y_AXIS));
-        cafePanel.setOpaque(false);
-        cafePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel entercafe = new JLabel("Enter Cafe Name");
-        entercafe.setFont(new Font("Serif", Font.BOLD, 24));
-        entercafe.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        CafeField = new JTextField(20);
-        CafeField.setBackground(new Color(62, 39, 35));
-        CafeField.setForeground(Color.WHITE);
-        CafeField.setMaximumSize(new Dimension(400, 45));
-        CafeField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        CafeField.setCaretColor(Color.WHITE);
-        CafeField.setFont(new Font("Serif", Font.PLAIN, 24));
-
-        cafePanel.add(entercafe);
-        cafePanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        cafePanel.add(CafeField);
-
-
-        JPanel EmailPanel = new JPanel();
-        EmailPanel.setLayout(new BoxLayout(EmailPanel, BoxLayout.Y_AXIS));
-        EmailPanel.setOpaque(false);
-        EmailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel enteremail = new JLabel("Enter email");
-        enteremail.setFont(new Font("Serif", Font.BOLD, 24));
-        enteremail.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        EmailField = new JTextField(20);
-        EmailField.setBackground(new Color(62, 39, 35));
-        EmailField.setForeground(Color.WHITE);
-        EmailField.setMaximumSize(new Dimension(400, 45));
-        EmailField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        EmailField.setCaretColor(Color.WHITE);
-        EmailField.setFont(new Font("Serif", Font.PLAIN, 24));
-
-        EmailPanel.add(enteremail);
-        EmailPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        EmailPanel.add(EmailField);
-
-        JPanel passwordPanel = new JPanel();
-        passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.Y_AXIS));
-        passwordPanel.setOpaque(false);
-        passwordPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel enterpass = new JLabel("Enter password");
-        enterpass.setFont(new Font("Serif", Font.BOLD, 24));
-        enterpass.setAlignmentX(Component.LEFT_ALIGNMENT);
-
+        phonenoField = new JTextField(20);
+        emailField = new JTextField(20);
+        cafeField = new JTextField(20);
         passwordField = new JPasswordField(20);
-        passwordField.setBackground(new Color(62, 39, 35));
-        passwordField.setForeground(Color.WHITE);
-        passwordField.setMaximumSize(new Dimension(400, 45));
-        passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        passwordField.setCaretColor(Color.WHITE);
-        passwordField.setFont(new Font("Serif", Font.PLAIN, 24));
+        confirmpassField = new JPasswordField(20);
 
-        passwordPanel.add(enterpass);
-        passwordPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        passwordPanel.add(passwordField);
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter your Name", nameField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter your Phone Number", phonenoField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter email", emailField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter Cafe Name", cafeField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Enter password", passwordField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
+        signUpBox.add(createInputPanel("Confirm password", confirmpassField));
+        signUpBox.add(Box.createRigidArea(new Dimension(0, 40)));
 
-        JPanel ConfirmpassPanel = new JPanel();
-        ConfirmpassPanel.setLayout(new BoxLayout(ConfirmpassPanel, BoxLayout.Y_AXIS));
-        ConfirmpassPanel.setOpaque(false);
-        ConfirmpassPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel confirmpass = new JLabel("Confirm password");
-        confirmpass.setFont(new Font("Serif", Font.BOLD, 24));
-        confirmpass.setAlignmentX(Component.LEFT_ALIGNMENT);
-
-        ConfirmpassField = new JPasswordField(20);
-        ConfirmpassField.setBackground(new Color(62, 39, 35));
-        ConfirmpassField.setForeground(Color.WHITE);
-        ConfirmpassField.setMaximumSize(new Dimension(400, 45));
-        ConfirmpassField.setAlignmentX(Component.LEFT_ALIGNMENT);
-        ConfirmpassField.setCaretColor(Color.WHITE);
-        ConfirmpassField.setFont(new Font("Serif", Font.PLAIN, 24));
-
-        ConfirmpassPanel.add(confirmpass);
-        ConfirmpassPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-        ConfirmpassPanel.add(ConfirmpassField);
-
-
-        SignUpButton = new JButton("SignUp");
-        SignUpButton.setFont(new Font("Serif", Font.BOLD, 32));
-        SignUpButton.setBackground(new Color(62, 39, 35));
-        SignUpButton.setForeground(Color.WHITE);
-        SignUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        SignUpButton.setMaximumSize(new Dimension(200, 60));
-
-        SignUpButton.addActionListener(this);
-
-        add(svgCanvas);
-        add(svgCanvas1);
-
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 15)));
-        SignUpBox.add(namePanel);
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 15)));
-        SignUpBox.add(PhonenoPanel);
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 15)));
-        SignUpBox.add(EmailPanel);
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 15)));
-        SignUpBox.add(cafePanel);
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 15)));
-        SignUpBox.add(passwordPanel);
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 15)));
-        SignUpBox.add(ConfirmpassPanel);
-        SignUpBox.add(Box.createRigidArea(new Dimension(0, 20)));
-        SignUpBox.add(SignUpButton);
-
-        add(SignUpBox);
+        // Sign Up Button
+        signUpButton = new JButton("SignUp");
+        signUpButton.setFont(new Font("Serif", Font.BOLD, 32));
+        signUpButton.setBackground(new Color(62, 39, 35));
+        signUpButton.setForeground(Color.WHITE);
+        signUpButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        signUpButton.setMaximumSize(new Dimension(200, 60));
+        signUpButton.addActionListener(this);
+        signUpBox.add(signUpButton);
 
         setVisible(true);
-
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e){
-        String name = nameField.getText();
-        String password = new String(passwordField.getText());
-        String phoneno = PhonenoField.getText();
-        String email = EmailField.getText();
-        String cafe = CafeField.getText();
-        String confirmpass = new String(ConfirmpassField.getText());
-        if (e.getSource() == SignUpButton) {
-            if (!name.isEmpty() && !password.isEmpty() && !phoneno.isEmpty() && !email.isEmpty() && !confirmpass.isEmpty() && !cafe.isEmpty() ) {
-                JOptionPane.showMessageDialog(null, "SignUp Successful");
-            } else if (name.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Enter name");
-            } else if (password.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Enter password");
-            }else if(phoneno.isEmpty()){
-                JOptionPane.showMessageDialog(null, "Enter phone Number");
-            }else if(email.isEmpty()){
-                JOptionPane.showMessageDialog(null, "Enter email");
-            }else if(confirmpass.isEmpty()){
-                JOptionPane.showMessageDialog(null, "Confirm password");
-            }else if(cafe.isEmpty()){
-                JOptionPane.showMessageDialog(null, "Enter cafe name");
+    // Helper method for creating input fields with labels
+    private JPanel createInputPanel(String labelText, JTextField textField) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Serif", Font.BOLD, 24));
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        textField.setBackground(new Color(62, 39, 35));
+        textField.setForeground(Color.WHITE);
+        textField.setMaximumSize(new Dimension(400, 50));
+        textField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        textField.setCaretColor(Color.WHITE);
+        textField.setFont(new Font("Serif", Font.PLAIN, 24));
+
+        panel.add(label);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(textField);
+        return panel;
+    }
+
+    // Action performed when SignUp button is clicked
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String name = nameField.getText();
+        String password = passwordField.getText();
+        String phoneno = phonenoField.getText();
+        String email = emailField.getText();
+        String cafe = cafeField.getText();
+        String confirmpass = confirmpassField.getText();
+
+        if (e.getSource() == signUpButton) {
+            if (!name.isEmpty() && !password.isEmpty() && !phoneno.isEmpty() &&
+                    !email.isEmpty() && !confirmpass.isEmpty() && !cafe.isEmpty()) {
+
+                if (!password.equals(confirmpass)) {
+                    JOptionPane.showMessageDialog(this, "Passwords do not match!");
+                } else {
+                    JOptionPane.showMessageDialog(this, "SignUp Successful");
+                }
+
+            } else if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter name");
+            } else if (phoneno.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter phone Number");
+            } else if (email.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter email");
+            } else if (password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter password");
+            } else if (confirmpass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Confirm password");
+            } else if (cafe.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Enter cafe name");
             }
         }
     }
@@ -252,5 +171,4 @@ public class SignUpOwner extends JFrame implements ActionListener {
     public static void main(String[] args) {
         new SignUpOwner();
     }
-
 }
