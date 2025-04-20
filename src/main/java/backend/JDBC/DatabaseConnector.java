@@ -2,11 +2,12 @@ package backend.JDBC;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class DatabaseConnector {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/studentdb";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/cafe_review_system";
     private static final String DB_USERNAME = "root";
-    private static final String DB_PASSWORD = "sameer7991shekhar";
+    private static final String DB_PASSWORD = "sit123";
 
     public static Connection getConnection() {
         try {

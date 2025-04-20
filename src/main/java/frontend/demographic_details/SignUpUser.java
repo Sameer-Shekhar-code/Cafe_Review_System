@@ -1,6 +1,5 @@
 package frontend.demographic_details;
 
-import frontend.dashboard.Dashboard;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
@@ -20,26 +19,26 @@ public class SignUpUser extends JFrame implements ActionListener {
     JSVGCanvas svgCanvas;
     JSVGCanvas svgCanvas1;
 
-    public SignUpUser() {
+    SignUpUser() {
         setTitle("SignUpUser");
         setSize(1500, 1100);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-
+        // Layered Pane to manage overlapping components
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, 1500, 1100);
         add(layeredPane);
 
-
+        // Background Panel
         JPanel backgroundPanel = new JPanel();
         backgroundPanel.setBounds(0, 0, 1500, 1100);
         backgroundPanel.setBackground(new Color(161, 107, 68));
         layeredPane.add(backgroundPanel, Integer.valueOf(0));
         backgroundPanel.setLayout(null);
 
-
+        // SVG 1
         svgCanvas = new JSVGCanvas();
         URL svgURL = getClass().getClassLoader().getResource("Assests/svg1.svg");
         if (svgURL != null) {
@@ -52,7 +51,7 @@ public class SignUpUser extends JFrame implements ActionListener {
         svgCanvas.setBackground(new Color(0, 0, 0, 0));
         layeredPane.add(svgCanvas, Integer.valueOf(1));
 
-
+        // SVG 2
         svgCanvas1 = new JSVGCanvas();
         URL svgURL1 = getClass().getClassLoader().getResource("Assests/svg2.svg");
         if (svgURL1 != null) {
@@ -65,7 +64,7 @@ public class SignUpUser extends JFrame implements ActionListener {
         svgCanvas1.setBackground(new Color(0, 0, 0, 0));
         layeredPane.add(svgCanvas1, Integer.valueOf(1));
 
-
+        // SignUpBox Panel
         JPanel SignUpBox = new JPanel();
         SignUpBox.setBounds(450, 100, 600, 650);
         SignUpBox.setBorder(BorderFactory.createLineBorder(new Color(62, 39, 35), 3));
@@ -99,11 +98,6 @@ public class SignUpUser extends JFrame implements ActionListener {
         SignUpButton.setMaximumSize(new Dimension(200, 60));
         SignUpButton.addActionListener(this);
         SignUpBox.add(SignUpButton);
-
-        SignUpButton.addActionListener(e -> {
-            dispose();
-            new Dashboard();
-        });
 
         setVisible(true);
     }
