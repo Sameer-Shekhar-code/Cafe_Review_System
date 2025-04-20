@@ -1,5 +1,6 @@
 package frontend.demographic_details;
 
+import backend.service.LoginService;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
@@ -11,12 +12,12 @@ import java.net.URL;
 public class Login extends JFrame implements ActionListener {
 
     JTextField usernameField;
-    JTextField passwordField;
+    JPasswordField passwordField; // ✅ Fix type to JPasswordField
     JButton loginButton;
     JSVGCanvas svgCanvas;
     JSVGCanvas svgCanvas1;
 
-    Login() {
+    public Login() {
         setTitle("Login");
         setSize(1500, 800);
         setLocationRelativeTo(null);
@@ -97,7 +98,7 @@ public class Login extends JFrame implements ActionListener {
         enterpass.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         passwordField = new JPasswordField(20);
-        passwordField.setBackground(new Color(62, 39, 35));
+        passwordField.setBackground(new Color(62, 62, 35));
         passwordField.setForeground(Color.WHITE);
         passwordField.setMaximumSize(new Dimension(400, 45));
         passwordField.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -129,8 +130,6 @@ public class Login extends JFrame implements ActionListener {
 
         // Add loginBox after SVGs so it's on top
         add(loginBox);
-
-        // Ensure loginBox stays on top
         getContentPane().setComponentZOrder(loginBox, 0);
 
         setVisible(true);
@@ -139,14 +138,25 @@ public class Login extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String username = usernameField.getText();
-        String password = new String(passwordField.getText());
+        String password = new String(passwordField.getPassword()); // ✅ Fixed method
+
         if (e.getSource() == loginButton) {
             if (!username.isEmpty() && !password.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Login Successful");
-            } else if (username.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Enter username");
-            } else if (password.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Enter password");
+                LoginService loginService = new LoginService();
+                boolean isValid = loginService.validateUser(username, password);
+
+                if (isValid) {
+                    JOptionPane.showMessageDialog(null, "Login Successful");
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Invalid username or password");
+                }
+            } else {
+                if (username.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Enter username");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Enter password");
+                }
             }
         }
     }

@@ -2,15 +2,19 @@
 package frontend.dashboard;
 import backend.service.Dashboard_service;
 
-import javax.swing.JFrame;
 import java.awt.Color;
 
 public class Dashboard extends javax.swing.JFrame {
 
 
     public Dashboard() {
+
+
+
         initComponents();
         getContentPane().setBackground(new Color(161, 107, 68));
+
+
 
     }
 
