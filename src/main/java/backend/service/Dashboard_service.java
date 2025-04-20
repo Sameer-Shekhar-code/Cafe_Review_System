@@ -1,98 +1,92 @@
-//package backend.service;
-//import frontend.dashboard.Dashboard;
-//import backend.JDBC.DatabaseConnector;
-//
-//import javax.swing.*;
-//import java.awt.*;
-//import java.net.URL;
-//import java.sql.Connection;
-//import java.sql.PreparedStatement;
-//import java.sql.ResultSet;
-//
-//public class Dashboard_service {
-//    Dashboard d=new Dashboard();
-//    Dashboard_service(){
-//        try {
-//            Connection conn = DatabaseConnector.getConnection();
-//            if (conn == null) {
-//                System.out.println("Database connection failed!");
-//                return;
-//            }
-//
-//            String query = "SELECT c.Name AS cafe_name, i.Image_URL AS image_url " +
-//                    "FROM Cafe c " +
-//                    "LEFT JOIN Image i ON c.Cafe_id = i.Cafe_id " +
-//                    "GROUP BY c.Cafe_id " +
-//                    "LIMIT 1";
-//
-//            PreparedStatement ps = conn.prepareStatement(query);
-//            ResultSet rs = ps.executeQuery();
-//
-//            while (rs.next() ) {
-//                String cafeName = rs.getString("cafe_name");
-//                String imagePath = rs.getString("image_url");
-//
-//               d.jTextField5.setText(cafeName);
-//
-//                try {
-//                    ImageIcon icon = new ImageIcon(imagePath); // Can be file path or URL
-//                    Image img = icon.getImage().getScaledInstance(130, 130, Image.SCALE_SMOOTH);
-//                    d.jLabel2.setIcon(new ImageIcon(img));
-//                } catch (Exception e) {
-//                    System.out.println("Error loading image: " + imagePath);
-//                    d.jLabel2.setText("Image not found");
-//                }
-//
-//
-//            }
-//
-//            conn.close();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//    }
-//
-//    }
-//
-//
-
 package backend.service;
 
+import frontend.dashboard.Dashboard;
 import backend.JDBC.DatabaseConnector;
 
+import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class TestDatabaseConnection {
-    public static void main(String[] args) {
-        Connection conn = DatabaseConnector.getConnection();
-        if (conn != null) {
-            System.out.println("Database connected successfully!");
+public class Dashboard_service {
 
-            try {
-                String query = "SELECT Cafe_Id, Name FROM cafe LIMIT 5";
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(query);
+    Dashboard d;
+    private List<String> cafeNames = new ArrayList<>();
+    private List<String> imageUrls = new ArrayList<>();
+    private List<String> rating = new ArrayList<>();
+    private List<String> reviews = new ArrayList<>();
 
-                System.out.println("Cafe_Id\tName");
-                while (rs.next()) {
-                    int cafeId = rs.getInt("Cafe_Id");
-                    String name = rs.getString("Name");
-                    System.out.println(cafeId + "\t" + name);
-                }
+    private int currentIndex = 0;
 
-                // Close resources
-                rs.close();
-                stmt.close();
-                conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+    public Dashboard_service(Dashboard dashboardInstance) {
+        this.d = dashboardInstance;
+        loadCafeData();
+    }
+
+    private void loadCafeData() {
+        String query = "SELECT c.Name AS cafe_name, MIN(i.Image_URL) AS image_url, c.Average_Rating as Rating, c.Total_Reviews as totalReview " +
+                "FROM Cafe c " +
+                "LEFT JOIN Image i ON c.Cafe_Id = i.Cafe_id " +
+                "GROUP BY c.Cafe_Id";
+
+        try (Connection conn = DatabaseConnector.getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                cafeNames.add(rs.getString("cafe_name"));
+                imageUrls.add(rs.getString("image_url"));
+                rating.add(rs.getString("Rating"));
+                reviews.add(rs.getString("totalReview"));
             }
-        } else {
-            System.out.println("Failed to connect to the database.");
+
+            if (!cafeNames.isEmpty()) {
+                startSlideshow();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
-}
 
+    private void startSlideshow() {
+        JLabel[] imageLabels = { d.jLabel2, d.jLabel3, d.jLabel4, d.jLabel6, d.jLabel9, d.jLabel10 };
+        JTextField[] nameFields = { d.jTextField5, d.jTextField4, d.jTextField3, d.jTextField6, d.jTextField7, d.jTextField8 };
+        JLabel[] ratingLabels={d.jLabel7, d.jLabel11, d.jLabel13, d.jLabel15, d.jLabel17, d.jLabel19};
+        JLabel[] reviewLabels={d.jLabel8, d.jLabel12, d.jLabel14, d.jLabel16, d.jLabel18, d.jLabel21};
+
+
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                SwingUtilities.invokeLater(() -> {
+                    for (int i = 0; i < imageLabels.length; i++) {
+                        int dataIndex = (currentIndex + i) % cafeNames.size();
+                        nameFields[i].setText(cafeNames.get(dataIndex));
+                        ratingLabels[i].setText(rating.get(dataIndex));
+                        reviewLabels[i].setText("("+reviews.get(dataIndex)+")");
+
+                        try {
+                            String imageUrl = imageUrls.get(dataIndex);
+                            ImageIcon icon = new ImageIcon(new URL(imageUrl));
+                            Image img = icon.getImage();
+                            Image resizedImage = img.getScaledInstance(imageLabels[i].getWidth(), imageLabels[i].getHeight(), Image.SCALE_SMOOTH);
+                            imageLabels[i].setIcon(new ImageIcon(resizedImage));
+                        } catch (Exception e) {
+                            imageLabels[i].setText("No image");
+                            imageLabels[i].setIcon(null);
+                        }
+                    }
+
+                    currentIndex = (currentIndex + imageLabels.length) % cafeNames.size();
+                });
+            }
+        }, 0, 3000); // every 3 seconds
+    }
+}

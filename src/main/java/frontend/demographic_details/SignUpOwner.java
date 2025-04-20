@@ -1,4 +1,4 @@
-package frontend.DemographicDetails;
+package frontend.demographic_details;
 
 import org.apache.batik.swing.JSVGCanvas;
 

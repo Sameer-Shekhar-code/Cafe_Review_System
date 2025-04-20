@@ -7,11 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
-
-
+import java.sql.*;
 
 public class Login extends JFrame implements ActionListener {
-
 
     JTextField usernameField;
     JTextField passwordField;
@@ -19,12 +17,16 @@ public class Login extends JFrame implements ActionListener {
     JSVGCanvas svgCanvas;
     JSVGCanvas svgCanvas1;
 
+    // Replace with your actual database credentials
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/your_db_name";
+    private static final String DB_USER = "your_db_user";
+    private static final String DB_PASSWORD = "your_db_password";
+
     Login() {
         setTitle("Login");
         setSize(1500, 800);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
         getContentPane().setBackground(new Color(161, 107, 68));
         setLayout(null);
@@ -40,7 +42,6 @@ public class Login extends JFrame implements ActionListener {
         svgCanvas.setOpaque(false);
         svgCanvas.setBackground(new Color(0, 0, 0, 0));
 
-
         svgCanvas1 = new JSVGCanvas();
         URL svgURL1 = getClass().getClassLoader().getResource("Assests/svg2.svg");
         if (svgURL1 != null) {
@@ -51,7 +52,6 @@ public class Login extends JFrame implements ActionListener {
         svgCanvas1.setBounds(595, -175, 900, 900);
         svgCanvas1.setOpaque(false);
         svgCanvas1.setBackground(new Color(0, 0, 0, 0));
-
 
         JPanel loginBox = new JPanel();
         loginBox.setBounds(450, 140, 600, 450);
@@ -84,7 +84,6 @@ public class Login extends JFrame implements ActionListener {
         usernamePanel.add(entername);
         usernamePanel.add(Box.createRigidArea(new Dimension(0, 5)));
         usernamePanel.add(usernameField);
-
 
         JPanel passwordPanel = new JPanel();
         passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.Y_AXIS));
@@ -129,23 +128,56 @@ public class Login extends JFrame implements ActionListener {
         loginBox.add(loginButton);
 
         add(loginBox);
-
         setVisible(true);
-
     }
 
     @Override
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e) {
         String username = usernameField.getText();
         String password = new String(passwordField.getText());
+
         if (e.getSource() == loginButton) {
-            if (!username.isEmpty() && !password.isEmpty()) {
-                JOptionPane.showMessageDialog(null, "Login Successful");
-            } else if (username.isEmpty()) {
+            if (username.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Enter username");
             } else if (password.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Enter password");
+            } else {
+                // Use multithreading for backend login
+                new Thread(() -> {
+                    boolean success = validateLogin(username, password);
+                    SwingUtilities.invokeLater(() -> {
+                        if (success) {
+                            JOptionPane.showMessageDialog(null, "Login Successful!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Invalid username or password");
+                        }
+                    });
+                }).start();
             }
+        }
+    }
+
+    public boolean validateLogin(String username, String password) {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+            String query = "SELECT * FROM users WHERE username=? AND password=?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
+
+            ResultSet rs = stmt.executeQuery();
+            boolean valid = rs.next();
+
+            rs.close();
+            stmt.close();
+            conn.close();
+
+            return valid;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
         }
     }
 

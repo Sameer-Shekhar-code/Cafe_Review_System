@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DatabaseConnector {
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/your_database_name";
-    private static final String DB_USERNAME = "your_username";
-    private static final String DB_PASSWORD = "your_password";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/studentdb";
+    private static final String DB_USERNAME = "root";
+    private static final String DB_PASSWORD = "sameer7991shekhar";
 
     public static Connection getConnection() {
         try {
@@ -20,4 +20,6 @@ public class DatabaseConnector {
             return null;
         }
     }
+
+
 }
