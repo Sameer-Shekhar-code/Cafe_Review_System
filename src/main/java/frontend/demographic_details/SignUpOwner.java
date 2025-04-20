@@ -1,5 +1,6 @@
 package frontend.demographic_details;
 
+import frontend.dashboard.Dashboard;
 import org.apache.batik.swing.JSVGCanvas;
 
 import javax.swing.*;
@@ -20,26 +21,23 @@ public class SignUpOwner extends JFrame implements ActionListener {
     JSVGCanvas svgCanvas;
     JSVGCanvas svgCanvas1;
 
-    SignUpOwner() {
+    public  SignUpOwner() {
         setTitle("SignUpOwner");
         setSize(1500, 1100);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        // Layered Pane to manage overlapping components
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setBounds(0, 0, 1500, 1100);
         add(layeredPane);
 
-        // Background Panel
         JPanel backgroundPanel = new JPanel();
         backgroundPanel.setBounds(0, 0, 1500, 1100);
         backgroundPanel.setBackground(new Color(161, 107, 68));
         layeredPane.add(backgroundPanel, Integer.valueOf(0));
         backgroundPanel.setLayout(null);
 
-        // SVG 1 - Bottom left corner
         svgCanvas = new JSVGCanvas();
         URL svgURL = getClass().getClassLoader().getResource("Assests/svg1.svg");
         if (svgURL != null) {
@@ -52,7 +50,6 @@ public class SignUpOwner extends JFrame implements ActionListener {
         svgCanvas.setBackground(new Color(0, 0, 0, 0));
         layeredPane.add(svgCanvas, Integer.valueOf(1));
 
-        // SVG 2 - Top right corner
         svgCanvas1 = new JSVGCanvas();
         URL svgURL1 = getClass().getClassLoader().getResource("Assests/svg2.svg");
         if (svgURL1 != null) {
@@ -65,7 +62,7 @@ public class SignUpOwner extends JFrame implements ActionListener {
         svgCanvas1.setBackground(new Color(0, 0, 0, 0));
         layeredPane.add(svgCanvas1, Integer.valueOf(1));
 
-        // SignUpBox Panel
+
         JPanel signUpBox = new JPanel();
         signUpBox.setBounds(450, 100, 600, 700);
         signUpBox.setBorder(BorderFactory.createLineBorder(new Color(62, 39, 35), 3));
@@ -73,7 +70,7 @@ public class SignUpOwner extends JFrame implements ActionListener {
         signUpBox.setLayout(new BoxLayout(signUpBox, BoxLayout.Y_AXIS));
         layeredPane.add(signUpBox, Integer.valueOf(2));
 
-        // Input Fields
+
         nameField = new JTextField(20);
         phonenoField = new JTextField(20);
         emailField = new JTextField(20);
@@ -95,7 +92,6 @@ public class SignUpOwner extends JFrame implements ActionListener {
         signUpBox.add(createInputPanel("Confirm password", confirmpassField));
         signUpBox.add(Box.createRigidArea(new Dimension(0, 40)));
 
-        // Sign Up Button
         signUpButton = new JButton("SignUp");
         signUpButton.setFont(new Font("Serif", Font.BOLD, 32));
         signUpButton.setBackground(new Color(62, 39, 35));
@@ -105,10 +101,14 @@ public class SignUpOwner extends JFrame implements ActionListener {
         signUpButton.addActionListener(this);
         signUpBox.add(signUpButton);
 
+        signUpButton.addActionListener(e -> {
+            dispose();
+            new Dashboard();
+        });
+
         setVisible(true);
     }
 
-    // Helper method for creating input fields with labels
     private JPanel createInputPanel(String labelText, JTextField textField) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -132,7 +132,6 @@ public class SignUpOwner extends JFrame implements ActionListener {
         return panel;
     }
 
-    // Action performed when SignUp button is clicked
     @Override
     public void actionPerformed(ActionEvent e) {
         String name = nameField.getText();
